@@ -32,6 +32,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.io.File;
@@ -54,17 +55,17 @@ public final class CropImage {
     /**
      * The key used to pass crop image source URI to {@link CropImageActivity}.
      */
-    static final String CROP_IMAGE_EXTRA_SOURCE = "CROP_IMAGE_EXTRA_SOURCE";
+    public static final String CROP_IMAGE_EXTRA_SOURCE = "CROP_IMAGE_EXTRA_SOURCE";
 
     /**
      * The key used to pass crop image options to {@link CropImageActivity}.
      */
-    static final String CROP_IMAGE_EXTRA_OPTIONS = "CROP_IMAGE_EXTRA_OPTIONS";
+    public static final String CROP_IMAGE_EXTRA_OPTIONS = "CROP_IMAGE_EXTRA_OPTIONS";
 
     /**
      * The key used to pass crop image result data back from {@link CropImageActivity}.
      */
-    static final String CROP_IMAGE_EXTRA_RESULT = "CROP_IMAGE_EXTRA_RESULT";
+    public static final String CROP_IMAGE_EXTRA_RESULT = "CROP_IMAGE_EXTRA_RESULT";
 
     /**
      * The request code used to start pick image activity to be used on result to identify the this specific request.
@@ -322,11 +323,11 @@ public final class CropImage {
         /**
          * Get {@link CropImageActivity} intent to start the activity.
          */
-        public Intent getIntent(Context context) {
+        public Intent getIntent(Context context, @Nullable Class<?> cls) {
             mOptions.validate();
 
             Intent intent = new Intent();
-            intent.setClass(context, CropImageActivity.class);
+            intent.setClass(context, cls  == null ? CropImageActivity.class : cls);
             intent.putExtra(CROP_IMAGE_EXTRA_SOURCE, mSource);
             intent.putExtra(CROP_IMAGE_EXTRA_OPTIONS, mOptions);
             return intent;
@@ -336,19 +337,21 @@ public final class CropImage {
          * Start {@link CropImageActivity}.
          *
          * @param activity activity to receive result
+         * @param cls activity class (or null to use default)
          */
-        public void start(Activity activity) {
+        public void start(Activity activity, @Nullable Class<?> cls) {
             mOptions.validate();
-            activity.startActivityForResult(getIntent(activity), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+            activity.startActivityForResult(getIntent(activity, cls), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
         }
 
         /**
          * Start {@link CropImageActivity}.
          *
          * @param fragment fragment to receive result
+         * @param cls activity class (or null to use default)
          */
-        public void start(Context context, Fragment fragment) {
-            fragment.startActivityForResult(getIntent(context), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+        public void start(Context context, Fragment fragment, @Nullable Class<?> cls) {
+            fragment.startActivityForResult(getIntent(context, cls), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
         }
 
         /**

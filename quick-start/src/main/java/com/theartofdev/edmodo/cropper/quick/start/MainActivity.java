@@ -95,6 +95,6 @@ public class MainActivity extends AppCompatActivity {
     private void startCropImageActivity(Uri imageUri) {
         CropImage.activity(imageUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .start(this);
+                .start(this, null);
     }
 }
